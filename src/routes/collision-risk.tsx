@@ -26,7 +26,7 @@ export const Route = createFileRoute("/collision-risk")({
       },
     ],
   }),
-  component: CollisionRisk;
+  component: CollisionRisk,
 });
 
 function KeyValue({ k, v, tone }: { k: string; v: string; tone?: string | undefined }) {
