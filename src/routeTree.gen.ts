@@ -11,9 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as CollisionRiskRouteImport } from './routes/collision-risk'
 import { Route as ConstellationsRouteImport } from './routes/constellations'
 import { Route as MissionControlRouteImport } from './routes/mission-control'
+import { Route as PredictionsRouteImport } from './routes/predictions'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AlertsRoute = AlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CollisionRiskRoute = CollisionRiskRouteImport.update({
@@ -40,51 +47,78 @@ const MissionControlRoute = MissionControlRouteImport.update({
   path: '/mission-control',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PredictionsRoute = PredictionsRouteImport.update({
+  id: '/predictions',
+  path: '/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/analytics': typeof AnalyticsRoute
   '/collision-risk': typeof CollisionRiskRoute
   '/constellations': typeof ConstellationsRoute
   '/mission-control': typeof MissionControlRoute
+  '/predictions': typeof PredictionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/analytics': typeof AnalyticsRoute
   '/collision-risk': typeof CollisionRiskRoute
   '/constellations': typeof ConstellationsRoute
   '/mission-control': typeof MissionControlRoute
+  '/predictions': typeof PredictionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/analytics': typeof AnalyticsRoute
   '/collision-risk': typeof CollisionRiskRoute
   '/constellations': typeof ConstellationsRoute
   '/mission-control': typeof MissionControlRoute
+  '/predictions': typeof PredictionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/alerts' | '/collision-risk' | '/constellations' | '/mission-control'
+    | '/'
+    | '/alerts'
+    | '/analytics'
+    | '/collision-risk'
+    | '/constellations'
+    | '/mission-control'
+    | '/predictions'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/alerts' | '/collision-risk' | '/constellations' | '/mission-control'
+    | '/'
+    | '/alerts'
+    | '/analytics'
+    | '/collision-risk'
+    | '/constellations'
+    | '/mission-control'
+    | '/predictions'
   id:
     | '__root__'
     | '/'
     | '/alerts'
+    | '/analytics'
     | '/collision-risk'
     | '/constellations'
     | '/mission-control'
+    | '/predictions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   CollisionRiskRoute: typeof CollisionRiskRoute
   ConstellationsRoute: typeof ConstellationsRoute
   MissionControlRoute: typeof MissionControlRoute
+  PredictionsRoute: typeof PredictionsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -101,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/alerts'
       fullPath: '/alerts'
       preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/collision-risk': {
@@ -124,15 +165,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MissionControlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/predictions': {
+      id: '/predictions'
+      path: '/predictions'
+      fullPath: '/predictions'
+      preLoaderRoute: typeof PredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  AnalyticsRoute: AnalyticsRoute,
   CollisionRiskRoute: CollisionRiskRoute,
   ConstellationsRoute: ConstellationsRoute,
   MissionControlRoute: MissionControlRoute,
+  PredictionsRoute: PredictionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
