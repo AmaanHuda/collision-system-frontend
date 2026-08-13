@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as CollisionRiskRouteImport } from './routes/collision-risk'
+import { Route as ConstellationsRouteImport } from './routes/constellations'
 import { Route as MissionControlRouteImport } from './routes/mission-control'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +20,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CollisionRiskRoute = CollisionRiskRouteImport.update({
   id: '/collision-risk',
   path: '/collision-risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConstellationsRoute = ConstellationsRouteImport.update({
+  id: '/constellations',
+  path: '/constellations',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MissionControlRoute = MissionControlRouteImport.update({
@@ -31,31 +43,47 @@ const MissionControlRoute = MissionControlRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/collision-risk': typeof CollisionRiskRoute
+  '/constellations': typeof ConstellationsRoute
   '/mission-control': typeof MissionControlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/collision-risk': typeof CollisionRiskRoute
+  '/constellations': typeof ConstellationsRoute
   '/mission-control': typeof MissionControlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
   '/collision-risk': typeof CollisionRiskRoute
+  '/constellations': typeof ConstellationsRoute
   '/mission-control': typeof MissionControlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/collision-risk' | '/mission-control'
+  fullPaths:
+    '/' | '/alerts' | '/collision-risk' | '/constellations' | '/mission-control'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/collision-risk' | '/mission-control'
-  id: '__root__' | '/' | '/collision-risk' | '/mission-control'
+  to:
+    '/' | '/alerts' | '/collision-risk' | '/constellations' | '/mission-control'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts'
+    | '/collision-risk'
+    | '/constellations'
+    | '/mission-control'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
   CollisionRiskRoute: typeof CollisionRiskRoute
+  ConstellationsRoute: typeof ConstellationsRoute
   MissionControlRoute: typeof MissionControlRoute
 }
 
@@ -68,11 +96,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/collision-risk': {
       id: '/collision-risk'
       path: '/collision-risk'
       fullPath: '/collision-risk'
       preLoaderRoute: typeof CollisionRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/constellations': {
+      id: '/constellations'
+      path: '/constellations'
+      fullPath: '/constellations'
+      preLoaderRoute: typeof ConstellationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mission-control': {
@@ -87,7 +129,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
   CollisionRiskRoute: CollisionRiskRoute,
+  ConstellationsRoute: ConstellationsRoute,
   MissionControlRoute: MissionControlRoute,
 }
 export const routeTree = rootRouteImport
