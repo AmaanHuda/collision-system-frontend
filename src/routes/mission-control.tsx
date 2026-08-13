@@ -46,7 +46,7 @@ function MissionControl() {
         <MetricCard label="Last Update" value={12} suffix="s" trend="STREAM LATENCY 0.4 s" sparkline={spark(11, 3)} />
       </div>
 
-      <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="mt-3 grid items-start gap-3 xl:grid-cols-[minmax(0,1fr)_380px]">
         <OrbitalViewport
           className="h-[420px] border border-border lg:h-[620px]"
           filters={filters}
@@ -58,7 +58,7 @@ function MissionControl() {
           {sat ? (
             <SatellitePanel sat={sat} onClose={() => setSat(null)} />
           ) : (
-            <AlertPanel limit={4} />
+            <AlertPanel limit={4} className="max-h-[420px]" />
           )}
           <AIAnalysis />
         </div>

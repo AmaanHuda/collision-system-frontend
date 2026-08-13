@@ -48,10 +48,10 @@ const fragment = /* glsl */ `
     base += vec3(0.05, 0.42, 0.52) * coast * 0.45;
 
     // graticule
-    float lon = abs(fract(vUv.x * 24.0) - 0.5);
-    float lat = abs(fract(vUv.y * 12.0) - 0.5);
-    float grid = smoothstep(0.49, 0.5, max(1.0 - lon * 2.0, 1.0 - lat * 2.0));
-    base += vec3(0.06, 0.30, 0.38) * grid * 0.30;
+    float lon = abs(fract(vUv.x * 24.0) - 0.5) * 2.0;
+    float lat = abs(fract(vUv.y * 12.0) - 0.5) * 2.0;
+    float grid = max(smoothstep(0.985, 1.0, lon), smoothstep(0.985, 1.0, lat));
+    base += vec3(0.06, 0.30, 0.38) * grid * 0.45;
 
     // terminator lighting
     vec3 lightDir = normalize(vec3(0.75, 0.35, 0.55));

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Area,
@@ -134,8 +134,8 @@ function PredictionsPage() {
                   <span key={i} className="tech-label text-center">{i}</span>
                 ))}
                 {densityGrid.map((row, ri) => (
-                  <>
-                    <span key={`l-${ri}`} className="tech-label self-center">{ALT_SHELLS[ri]}km</span>
+                  <Fragment key={`row-${ri}`}>
+                    <span className="tech-label self-center">{ALT_SHELLS[ri]}km</span>
                     {row.map((cell, ci) => (
                       <div
                         key={`${ri}-${ci}`}
@@ -146,7 +146,7 @@ function PredictionsPage() {
                         }}
                       />
                     ))}
-                  </>
+                  </Fragment>
                 ))}
               </div>
               <div className="mt-3 flex items-center gap-3">

@@ -54,14 +54,16 @@ export function AlertPanel({
   limit = 4,
   onSelect,
   activeId,
+  className,
 }: {
   limit?: number | undefined;
   onSelect?: ((a: Conjunction) => void) | undefined;
   activeId?: string | undefined;
+  className?: string | undefined;
 }) {
   const items = CONJUNCTIONS.filter((c) => c.status !== "RESOLVED").slice(0, limit);
   return (
-    <Panel className="flex h-full flex-col">
+    <Panel className={cn("flex h-full flex-col", className)}>
       <PanelHeader
         title="ACTIVE ALERTS"
         meta={`${items.length} OPEN`}
