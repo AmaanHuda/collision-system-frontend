@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CollisionRiskRouteImport } from './routes/collision-risk'
+import { Route as MissionControlRouteImport } from './routes/mission-control'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CollisionRiskRoute = CollisionRiskRouteImport.update({
+  id: '/collision-risk',
+  path: '/collision-risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionControlRoute = MissionControlRouteImport.update({
+  id: '/mission-control',
+  path: '/mission-control',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/collision-risk': typeof CollisionRiskRoute
+  '/mission-control': typeof MissionControlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/collision-risk': typeof CollisionRiskRoute
+  '/mission-control': typeof MissionControlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/collision-risk': typeof CollisionRiskRoute
+  '/mission-control': typeof MissionControlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/collision-risk' | '/mission-control'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/collision-risk' | '/mission-control'
+  id: '__root__' | '/' | '/collision-risk' | '/mission-control'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CollisionRiskRoute: typeof CollisionRiskRoute
+  MissionControlRoute: typeof MissionControlRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/collision-risk': {
+      id: '/collision-risk'
+      path: '/collision-risk'
+      fullPath: '/collision-risk'
+      preLoaderRoute: typeof CollisionRiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mission-control': {
+      id: '/mission-control'
+      path: '/mission-control'
+      fullPath: '/mission-control'
+      preLoaderRoute: typeof MissionControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CollisionRiskRoute: CollisionRiskRoute,
+  MissionControlRoute: MissionControlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
