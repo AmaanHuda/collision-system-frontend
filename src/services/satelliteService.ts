@@ -163,7 +163,7 @@ export async function fetchSatellites(force = false): Promise<SatelliteFeed> {
 
   const seen = new Set<string>();
   try {
-    const results = await Promise.allSettled(GROUPS.map((g) => fetchGroup(g, seen)));
+    const results = await Promise.allSettled(GROUPS.map((g) => fetchGroup(g, seen, force)));
     const satellites = results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
     if (!satellites.length) throw new Error("no live element sets");
     lastFetchAt = now;
