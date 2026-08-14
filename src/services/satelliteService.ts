@@ -110,15 +110,52 @@ export async function loadFallback(): Promise<SatelliteObject[]> {
   return parseTle(FALLBACK_TLE, "other", 999, new Set());
 }
 
-async function fetchGroup(spec: GroupSpec, seen: Set<string>) {
-  const url = `${BASE}?GROUP=${spec.celestrak}&FORMAT=tle`;
-  const res = await fetch(url, { headers: { Accept: "text/plain" } });
-  if (!res.ok) throw new Error(`CelesTrak ${spec.celestrak}: ${res.status}`);
-  const text = await res.text();
-  if (text.includes("Invalid query") || text.trim().length < 100)
-    throw new Error(`CelesTrak ${spec.celestrak}: empty response`);
-  return parseTle(text, spec.group, spec.limit, seen);
+/** Persist raw element sets so CelesTrak is never queried more than needed. */
+const CACHE_TTL_MS = 12 * 60 * 60 * 1000;
+
+function cacheKey(group: string) {
+  return `orbital-ai:gp:${group}`;
 }
+
+function readCache(group: string): { text: string; at: number } | null {
+  try {
+    const raw = localStorage.getItem(cacheKey(group));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { text: string; at: number };
+    return parsed.text ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCache(group: string, text: string) {
+  try {
+    localStorage.setItem(cacheKey(group), JSON.stringify({ text, at: Date.now() }));
+  } catch {
+    /* storage unavailable / quota */
+  }
+}
+
+async function fetchGroup(spec: GroupSpec, seen: Set<string>, force: boolean) {
+  const cached = readCache(spec.celestrak);
+  if (cached && !force && Date.now() - cached.at < CACHE_TTL_MS)
+    return parseTle(cached.text, spec.group, spec.limit, seen);
+
+  const url = `${BASE}?GROUP=${spec.celestrak}&FORMAT=tle`;
+  try {
+    const res = await fetch(url, { headers: { Accept: "text/plain" } });
+    const text = res.ok ? await res.text() : "";
+    if (!res.ok || text.includes("Invalid query") || text.trim().length < 100)
+      throw new Error(`CelesTrak ${spec.celestrak}: ${res.status}`);
+    writeCache(spec.celestrak, text);
+    return parseTle(text, spec.group, spec.limit, seen);
+  } catch (err) {
+    // CelesTrak throttles repeated identical queries — reuse the last good copy.
+    if (cached) return parseTle(cached.text, spec.group, spec.limit, seen);
+    throw err;
+  }
+}
+
 
 export async function fetchSatellites(force = false): Promise<SatelliteFeed> {
   const now = Date.now();
