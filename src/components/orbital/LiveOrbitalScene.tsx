@@ -186,7 +186,7 @@ function TrackedSatellite({
           <sphereGeometry args={[0.05, 16, 16]} />
           <meshBasicMaterial color={color} transparent opacity={0.16} toneMapped={false} />
         </mesh>
-        <Html center distanceFactor={5} zIndexRange={[9, 0]}>
+        <Html center zIndexRange={[9, 0]}>
           <div
             className="pointer-events-none translate-y-[-26px] whitespace-nowrap border bg-background/85 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.18em] backdrop-blur-sm"
             style={{ borderColor: color, color }}
@@ -253,7 +253,7 @@ function ConjunctionVisualization({
             <sphereGeometry args={[0.055, 20, 20]} />
             <meshBasicMaterial color={hex} transparent opacity={0.14} toneMapped={false} />
           </mesh>
-          <Html center distanceFactor={5} zIndexRange={[9, 0]}>
+          <Html center zIndexRange={[9, 0]}>
             <div
               className="pointer-events-none translate-y-[-30px] whitespace-nowrap border bg-background/85 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.18em] backdrop-blur-sm"
               style={{ borderColor: hex, color: hex }}
@@ -280,7 +280,7 @@ function HoverLabel({ sat }: { sat: SatelliteObject | null }) {
   if (!sat) return null;
   return (
     <group ref={group}>
-      <Html center distanceFactor={5} zIndexRange={[8, 0]}>
+      <Html center zIndexRange={[8, 0]}>
         <div className="pointer-events-none translate-y-[-20px] whitespace-nowrap border border-primary/60 bg-background/85 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.16em] text-primary backdrop-blur-sm">
           {sat.name}
         </div>
@@ -316,7 +316,7 @@ function CameraDirector({
     const desired = target.current
       .clone()
       .normalize()
-      .multiplyScalar(target.current.length() + 0.9);
+      .multiplyScalar(target.current.length() + 1.25);
     camera.position.lerp(desired, 0.045);
     c.update();
     if (camera.position.distanceTo(desired) < 0.02) active.current = 0;
