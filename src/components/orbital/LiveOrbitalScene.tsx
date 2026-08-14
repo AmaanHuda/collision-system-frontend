@@ -316,7 +316,7 @@ function CameraDirector({
     const desired = target.current
       .clone()
       .normalize()
-      .multiplyScalar(target.current.length() + 1.25);
+      .multiplyScalar(target.current.length() + 2.2);
     camera.position.lerp(desired, 0.045);
     c.update();
     if (camera.position.distanceTo(desired) < 0.02) active.current = 0;
