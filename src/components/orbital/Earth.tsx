@@ -53,7 +53,7 @@ const fragment = /* glsl */ `
       float hy = texture2D(uTopo, vUv + vec2(0.0, 0.0015)).r - h;
       dayCol *= 1.0 + clamp((hx + hy) * 6.0, -0.25, 0.25);
     } else {
-      dayCol = vec3(0.05, 0.16, 0.28);
+      dayCol = vec3(1.0, 0.0, 0.0);
       nightCol = vec3(0.01, 0.02, 0.05);
     }
 
