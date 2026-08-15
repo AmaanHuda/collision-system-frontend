@@ -8,6 +8,7 @@ import {
   eciToScene,
   orbitTrack,
   stateAt,
+  sunDirectionScene,
   type SatGroup,
   type SatelliteObject,
 } from "@/utils/orbitalPropagation";
