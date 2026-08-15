@@ -9,7 +9,7 @@ import { sunDirectionScene, gmstAngle } from "@/utils/orbitalPropagation";
  * Rotation is driven by GMST so the surface stays registered with ECI orbits.
  */
 
-const TEX_BASE = "https://unpkg.com/three-globe@2.31.0/example/img";
+const TEX_BASE = "/textures";
 
 const vertex = /* glsl */ `
   varying vec2 vUv;
@@ -114,7 +114,7 @@ function useEarthTextures() {
       new Promise<THREE.Texture>((res, rej) => loader.load(`${TEX_BASE}/${f}`, res, undefined, rej));
 
     Promise.all([
-      load("earth-blue-marble.jpg"),
+      load("earth-day.jpg"),
       load("earth-night.jpg"),
       load("earth-topology.png"),
     ])
