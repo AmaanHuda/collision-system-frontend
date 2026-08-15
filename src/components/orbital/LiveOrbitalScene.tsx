@@ -367,10 +367,19 @@ export function LiveOrbitalScene({
 
   const focusPoint = conjunction ? conjunction.closestPoint : focus;
 
+  // Start on the sunlit hemisphere so the globe reads as a lit Earth from space.
+  const initialCamera = useMemo(() => {
+    const sun = sunDirectionScene(new Date());
+    const dir = sun.clone().setY(0);
+    if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+    dir.normalize().multiplyScalar(3.6);
+    return [dir.x, 1.35, dir.z] as [number, number, number];
+  }, []);
+
   return (
     <div className={className}>
       <Canvas
-        camera={{ position: [0, 1.5, 3.8], fov: 42 }}
+        camera={{ position: initialCamera, fov: 42 }}
         dpr={[1, 1.75]}
         gl={{ antialias: true, powerPreference: "high-performance" }}
         onPointerMissed={() => setHovered(null)}
