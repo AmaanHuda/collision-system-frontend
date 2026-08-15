@@ -98,7 +98,7 @@ function Fleet({
     [sats, pos, vel],
   );
 
-  useFrame((state) => {
+  useFrame(() => {
     const mesh = ref.current;
     if (!mesh || !sats.length) return;
     const simMs = Date.now();
@@ -160,7 +160,7 @@ function TrackedSatellite({
   const group = useRef<THREE.Group>(null);
   const track = useMemo(() => orbitTrack(sat, new Date(), 360), [sat]);
 
-  useFrame((state) => {
+  useFrame(() => {
     const simMs = Date.now();
     const s = stateAt(sat, new Date(simMs));
     if (!s || !group.current) return;
