@@ -107,6 +107,7 @@ function useEarthTextures() {
   } | null>(null);
 
   useEffect(() => {
+    console.log('[earth] effect start');
     let cancelled = false;
     const loader = new THREE.TextureLoader();
     loader.setCrossOrigin("anonymous");
