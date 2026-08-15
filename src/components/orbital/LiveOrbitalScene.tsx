@@ -8,6 +8,7 @@ import {
   eciToScene,
   orbitTrack,
   stateAt,
+  sunDirectionScene,
   type SatGroup,
   type SatelliteObject,
 } from "@/utils/orbitalPropagation";
@@ -25,9 +26,8 @@ export const DEFAULT_GLOBE_FILTERS: GlobeFilters = {
   riskMode: false,
 };
 
-/** Simulation speed multiplier so orbital motion is perceptible. */
-const TIME_SCALE = 40;
-const PROP_INTERVAL_MS = 400;
+/** Real time only: satellites are propagated against the actual UTC clock. */
+const PROP_INTERVAL_MS = 250;
 const EARTH_R_KM = 6371;
 
 const dummy = new THREE.Object3D();
@@ -63,7 +63,6 @@ function Fleet({
   onPick: (o: SatelliteObject) => void;
 }) {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const base = useMemo(() => Date.now(), []);
   const pos = useMemo(() => new Float32Array(sats.length * 3), [sats]);
   const vel = useMemo(() => new Float32Array(sats.length * 3), [sats]);
   const lastProp = useRef(0);
@@ -100,11 +99,11 @@ function Fleet({
     [sats, pos, vel],
   );
 
-  useFrame((state) => {
+  useFrame(() => {
     const mesh = ref.current;
     if (!mesh || !sats.length) return;
-    const simMs = base + state.clock.elapsedTime * 1000 * TIME_SCALE;
-    if (simMs - lastProp.current > PROP_INTERVAL_MS * TIME_SCALE) propagate(simMs);
+    const simMs = Date.now();
+    if (simMs - lastProp.current > PROP_INTERVAL_MS) propagate(simMs);
     const dt = (simMs - lastProp.current) / 1000;
     for (let i = 0; i < sats.length; i++) {
       dummy.position.set(
@@ -160,11 +159,10 @@ function TrackedSatellite({
   onPositionChange?: ((v: THREE.Vector3) => void) | undefined;
 }) {
   const group = useRef<THREE.Group>(null);
-  const base = useMemo(() => Date.now(), []);
-  const track = useMemo(() => orbitTrack(sat, new Date(), 200), [sat]);
+  const track = useMemo(() => orbitTrack(sat, new Date(), 360), [sat]);
 
-  useFrame((state) => {
-    const simMs = base + state.clock.elapsedTime * 1000 * TIME_SCALE;
+  useFrame(() => {
+    const simMs = Date.now();
     const s = stateAt(sat, new Date(simMs));
     if (!s || !group.current) return;
     eciToScene(s.position.x, s.position.y, s.position.z, tmpV);
@@ -209,12 +207,11 @@ function ConjunctionVisualization({
   result: ConjunctionResult | null;
 }) {
   const line = useRef<THREE.Line>(null);
-  const base = useMemo(() => Date.now(), []);
   const pa = useMemo(() => new THREE.Vector3(), []);
   const pb = useMemo(() => new THREE.Vector3(), []);
 
-  useFrame((state) => {
-    const d = new Date(base + state.clock.elapsedTime * 1000 * TIME_SCALE);
+  useFrame(() => {
+    const d = new Date();
     const sa = stateAt(a, d);
     const sb = stateAt(b, d);
     if (!sa || !sb) return;
@@ -269,10 +266,9 @@ function ConjunctionVisualization({
 
 function HoverLabel({ sat }: { sat: SatelliteObject | null }) {
   const group = useRef<THREE.Group>(null);
-  const base = useMemo(() => Date.now(), []);
-  useFrame((state) => {
+  useFrame(() => {
     if (!sat || !group.current) return;
-    const s = stateAt(sat, new Date(base + state.clock.elapsedTime * 1000 * TIME_SCALE));
+    const s = stateAt(sat, new Date());
     if (!s) return;
     eciToScene(s.position.x, s.position.y, s.position.z, tmpV);
     group.current.position.copy(tmpV);
@@ -358,7 +354,7 @@ export function LiveOrbitalScene({
     const out: { id: string; pts: THREE.Vector3[]; color: string }[] = [];
     for (let i = 0; i < visible.length; i += step) {
       const s = visible[i]!;
-      const pts = orbitTrack(s, now, 120);
+      const pts = orbitTrack(s, now, 220);
       if (pts.length > 2) out.push({ id: s.id, pts, color: GROUP_COLOR[s.group] });
     }
     return out;
@@ -372,16 +368,26 @@ export function LiveOrbitalScene({
 
   const focusPoint = conjunction ? conjunction.closestPoint : focus;
 
+  // Start on the sunlit hemisphere so the globe reads as a lit Earth from space.
+  const initialCamera = useMemo(() => {
+    const sun = sunDirectionScene(new Date());
+    const dir = sun.clone().setY(0);
+    if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+    dir.normalize().multiplyScalar(3.6);
+    return [dir.x, 1.35, dir.z] as [number, number, number];
+  }, []);
+
   return (
     <div className={className}>
       <Canvas
-        camera={{ position: [0, 1.5, 3.8], fov: 42 }}
+        camera={{ position: initialCamera, fov: 42 }}
         dpr={[1, 1.75]}
         gl={{ antialias: true, powerPreference: "high-performance" }}
         onPointerMissed={() => setHovered(null)}
       >
         <color attach="background" args={["#05070d"]} />
-        <ambientLight intensity={0.6} />
+        <ambientLight intensity={0.35} />
+        <directionalLight position={[5, 2, 4]} intensity={1.1} />
         <Suspense fallback={null}>
           <Stars radius={90} depth={45} count={3200} factor={3} saturation={0} fade speed={0.3} />
           <Earth />
@@ -391,8 +397,8 @@ export function LiveOrbitalScene({
               points={o.pts}
               color={o.color}
               transparent
-              opacity={0.12}
-              lineWidth={1}
+              opacity={0.16}
+              lineWidth={1.1}
             />
           ))}
           <Fleet

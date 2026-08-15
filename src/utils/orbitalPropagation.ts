@@ -132,3 +132,31 @@ export const GROUP_COLOR: Record<SatGroup, string> = {
   gps: "#22d3a6",
   other: "#7b90a8",
 };
+
+/** Greenwich Mean Sidereal Time (radians) for a given instant. */
+export function gmstAngle(date: Date): number {
+  const jd = date.getTime() / 86400000 + 2440587.5;
+  const T = (jd - 2451545.0) / 36525;
+  let g =
+    280.46061837 +
+    360.98564736629 * (jd - 2451545.0) +
+    0.000387933 * T * T -
+    (T * T * T) / 38710000;
+  g = ((g % 360) + 360) % 360;
+  return (g * Math.PI) / 180;
+}
+
+/** Unit vector toward the Sun in scene coordinates (low-precision solar model). */
+export function sunDirectionScene(date: Date, out = new THREE.Vector3()): THREE.Vector3 {
+  const jd = date.getTime() / 86400000 + 2440587.5;
+  const n = jd - 2451545.0;
+  const L = ((280.46 + 0.9856474 * n) * Math.PI) / 180; // mean longitude
+  const g = ((357.528 + 0.9856003 * n) * Math.PI) / 180; // mean anomaly
+  const lambda = L + (1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * (Math.PI / 180);
+  const eps = ((23.439 - 0.0000004 * n) * Math.PI) / 180;
+  // ECI (equatorial) unit vector
+  const x = Math.cos(lambda);
+  const y = Math.cos(eps) * Math.sin(lambda);
+  const z = Math.sin(eps) * Math.sin(lambda);
+  return eciToScene(x, y, z, out).multiplyScalar(EARTH_RADIUS_KM).normalize();
+}
