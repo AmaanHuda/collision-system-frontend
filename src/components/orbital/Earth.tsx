@@ -185,6 +185,7 @@ export function Earth({ radius = 1 }: { radius?: number }) {
       <mesh ref={globe}>
         <sphereGeometry args={[radius, 128, 128]} />
         <shaderMaterial
+          key={tex ? "tex" : "plain"}
           ref={mat}
           vertexShader={vertex}
           fragmentShader={fragment}
