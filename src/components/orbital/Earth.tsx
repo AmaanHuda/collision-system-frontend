@@ -124,9 +124,11 @@ function useEarthTextures() {
           t.colorSpace = THREE.SRGBColorSpace;
           t.anisotropy = 8;
         }
+        console.log('[earth] textures loaded');
         setTex({ day, night, topo });
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log('[earth] texture load failed', e);
         /* offline — procedural fallback shading is used */
       });
     return () => {
