@@ -107,7 +107,6 @@ function useEarthTextures() {
   } | null>(null);
 
   useEffect(() => {
-    console.log('[earth] effect start');
     let cancelled = false;
     const loader = new THREE.TextureLoader();
     loader.setCrossOrigin("anonymous");
@@ -125,11 +124,9 @@ function useEarthTextures() {
           t.colorSpace = THREE.SRGBColorSpace;
           t.anisotropy = 8;
         }
-        console.log('[earth] textures loaded');
         setTex({ day, night, topo });
       })
-      .catch((e) => {
-        console.log('[earth] texture load failed', e);
+      .catch(() => {
         /* offline — procedural fallback shading is used */
       });
     return () => {
@@ -141,8 +138,6 @@ function useEarthTextures() {
 }
 
 export function Earth({ radius = 1 }: { radius?: number }) {
-  const mat = useRef<THREE.ShaderMaterial>(null);
-  const atmo = useRef<THREE.ShaderMaterial>(null);
   const globe = useRef<THREE.Mesh>(null);
   const tex = useEarthTextures();
 
@@ -162,14 +157,34 @@ export function Earth({ radius = 1 }: { radius?: number }) {
     [],
   );
 
+  const surfaceMat = useMemo(
+    () =>
+      new THREE.ShaderMaterial({ vertexShader: vertex, fragmentShader: fragment, uniforms }),
+    [uniforms],
+  );
+
+  const atmoMat = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        vertexShader: atmoVertex,
+        fragmentShader: atmoFragment,
+        uniforms: atmoUniforms,
+        transparent: true,
+        side: THREE.BackSide,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      }),
+    [atmoUniforms],
+  );
+
   useEffect(() => {
     if (!tex) return;
     uniforms.uDay.value = tex.day;
     uniforms.uNight.value = tex.night;
     uniforms.uTopo.value = tex.topo;
     uniforms.uHasTex.value = 1;
-    if (mat.current) mat.current.needsUpdate = true;
-  }, [tex, uniforms]);
+    surfaceMat.needsUpdate = true;
+  }, [tex, uniforms, surfaceMat]);
 
   useFrame(() => {
     const now = new Date();
@@ -184,28 +199,13 @@ export function Earth({ radius = 1 }: { radius?: number }) {
     <group>
       <mesh ref={globe}>
         <sphereGeometry args={[radius, 128, 128]} />
-        <shaderMaterial
-          key={tex ? "tex" : "plain"}
-          ref={mat}
-          vertexShader={vertex}
-          fragmentShader={fragment}
-          uniforms={uniforms}
-        />
+        <primitive object={surfaceMat} attach="material" />
       </mesh>
 
       {/* atmospheric shell */}
       <mesh scale={1.022}>
         <sphereGeometry args={[radius, 64, 64]} />
-        <shaderMaterial
-          ref={atmo}
-          vertexShader={atmoVertex}
-          fragmentShader={atmoFragment}
-          uniforms={atmoUniforms}
-          transparent
-          side={THREE.BackSide}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
+        <primitive object={atmoMat} attach="material" />
       </mesh>
     </group>
   );
