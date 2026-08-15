@@ -53,7 +53,7 @@ const fragment = /* glsl */ `
       float hy = texture2D(uTopo, vUv + vec2(0.0, 0.0015)).r - h;
       dayCol *= 1.0 + clamp((hx + hy) * 6.0, -0.25, 0.25);
     } else {
-      dayCol = vec3(1.0, 0.0, 0.0);
+      dayCol = vec3(0.05, 0.16, 0.28);
       nightCol = vec3(0.01, 0.02, 0.05);
     }
 
@@ -69,7 +69,7 @@ const fragment = /* glsl */ `
     float fres = pow(1.0 - clamp(dot(normalize(vNormal), normalize(vViewDir)), 0.0, 1.0), 3.0);
     col += vec3(0.22, 0.52, 0.95) * fres * (0.30 + 0.65 * day);
 
-    gl_FragColor = vec4(vec3(day, uHasTex, 0.0), 1.0);
+    gl_FragColor = vec4(col, 1.0);
   }
 `;
 
