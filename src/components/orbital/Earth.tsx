@@ -59,7 +59,7 @@ const fragment = /* glsl */ `
 
     // slight cool cast + gentle exposure so it reads as space imagery
     dayCol *= vec3(0.96, 1.0, 1.06);
-    vec3 col = mix(nightCol * 1.35, dayCol * (0.25 + 0.95 * clamp(sun, 0.0, 1.0)), day);
+    vec3 col = mix(nightCol * 1.8, dayCol * (0.55 + 0.95 * clamp(sun, 0.0, 1.0)) * 1.25, day);
 
     // specular sheen on oceans near the sun glint
     float glint = pow(clamp(dot(reflect(-normalize(uSunDir), n), normalize(vViewDir)), 0.0, 1.0), 24.0);
