@@ -69,7 +69,7 @@ const fragment = /* glsl */ `
     float fres = pow(1.0 - clamp(dot(normalize(vNormal), normalize(vViewDir)), 0.0, 1.0), 3.0);
     col += vec3(0.22, 0.52, 0.95) * fres * (0.30 + 0.65 * day);
 
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(vec3(day, uHasTex, 0.0), 1.0);
   }
 `;
 
