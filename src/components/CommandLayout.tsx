@@ -95,12 +95,16 @@ export function CommandLayout({
             <span className="absolute inset-0 animate-radar rounded-none border-t border-primary/60" />
           </span>
           <span>
-            <span className="block font-mono text-sm tracking-[0.24em] text-foreground">
+            <span className="flex items-center gap-1.5 font-mono text-sm tracking-[0.24em] text-foreground">
               ORBITAL AI
+              <span className="border border-primary/30 px-1 font-mono text-[7px] tracking-[0.2em] text-primary/80">
+                BETA
+              </span>
             </span>
             <span className="tech-label">SSA PLATFORM v2.4</span>
           </span>
         </Link>
+
 
         <nav className="flex-1 space-y-0.5 px-2 py-3">
           {NAV.map(({ to, label, icon: Icon }) => {
