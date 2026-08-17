@@ -119,34 +119,36 @@ export function CommandLayout({
 
       {/* Main */}
       <div className="relative flex min-h-screen flex-1 flex-col lg:ml-60">
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/80 px-4 py-3 backdrop-blur-xl">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-30 flex items-center justify-between gap-2 border-b border-border bg-background/80 px-3 py-3 backdrop-blur-xl sm:gap-4 sm:px-4">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
-              className="border border-border p-1.5 text-muted-foreground lg:hidden"
+              className="shrink-0 border border-border p-1.5 text-muted-foreground lg:hidden"
               aria-label="Toggle navigation"
             >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
-            <div>
-              <h1 className="font-mono text-[13px] tracking-[0.24em] text-foreground">
+            <div className="min-w-0">
+              <h1 className="truncate font-mono text-[11px] tracking-[0.18em] text-foreground sm:text-[13px] sm:tracking-[0.24em]">
                 {title}
               </h1>
-              {subtitle ? <p className="tech-label mt-0.5">{subtitle}</p> : null}
+              {subtitle ? (
+                <p className="tech-label mt-0.5 hidden truncate sm:block">{subtitle}</p>
+              ) : null}
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden items-center gap-4 md:flex">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
+            <div className="hidden items-center gap-4 xl:flex">
               <StatusChip label="SYSTEM" value="NOMINAL" tone="low" />
               <StatusChip label="AI ENGINE" value="ACTIVE" tone="primary" />
               <StatusChip label="DATA SYNC" value="12s" tone="violet" />
             </div>
-            <span className="font-mono text-[11px] tracking-[0.14em] text-primary">
+            <span className="whitespace-nowrap font-mono text-[10px] tracking-[0.1em] text-primary sm:text-[11px] sm:tracking-[0.14em]">
               {clock}
             </span>
-            <CircleUser className="h-5 w-5 text-muted-foreground" strokeWidth={1.4} />
+            <CircleUser className="hidden h-5 w-5 shrink-0 text-muted-foreground sm:block" strokeWidth={1.4} />
           </div>
         </header>
 
