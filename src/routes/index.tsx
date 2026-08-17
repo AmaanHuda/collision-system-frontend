@@ -45,7 +45,11 @@ function OrbitalCommand() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
 
+  const dataAgeMinutes = lastSync ? Math.floor((Date.now() - lastSync.getTime()) / 60000) : null;
+  const dataStale = dataAgeMinutes !== null && dataAgeMinutes > 120;
+
   const [filters, setFilters] = useState<GlobeFilters>(DEFAULT_GLOBE_FILTERS);
+
 
   const [satA, setSatA] = useState<SatelliteObject | null>(null);
   const [satB, setSatB] = useState<SatelliteObject | null>(null);

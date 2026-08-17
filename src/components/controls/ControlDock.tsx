@@ -149,9 +149,16 @@ export function ControlDock({
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setQuery("");
+                  setOpen(null);
+                }
+              }}
               placeholder="NAME OR NORAD ID"
-              className="w-full bg-transparent font-mono text-[11px] tracking-[0.12em] text-foreground outline-none placeholder:text-muted-foreground/60"
+              className="w-full bg-transparent font-mono text-[11px] tracking-[0.12em] text-foreground outline-none ring-0 placeholder:text-muted-foreground/60 focus:ring-0"
             />
+
             <button type="button" onClick={() => setQuery("")} aria-label="Clear search">
               <X className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
             </button>
