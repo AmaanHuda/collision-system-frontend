@@ -137,8 +137,17 @@ function OrbitalCommand() {
         />
       </ClientOnly>
 
+      {status === "live" && satellites.length === 0 && (
+        <div className="pointer-events-none absolute left-4 top-20 z-20 max-w-xs border border-risk-moderate/40 bg-background/80 p-2 backdrop-blur-sm">
+          <p className="font-mono text-[9px] tracking-[0.14em] text-risk-moderate">
+            CATALOG EMPTY · CHECK CONNECTION
+          </p>
+        </div>
+      )}
+
       {/* system status — top left */}
       <div className="pointer-events-none absolute left-4 top-4 z-20">
+
         <h1 className="font-mono text-[11px] tracking-[0.34em] text-foreground">ORBITAL AI</h1>
         <p
           className={cn(
