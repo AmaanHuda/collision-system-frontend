@@ -14,25 +14,32 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+      <div className="grid-overlay pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative z-10 max-w-md text-center">
+        <div className="mb-6 flex items-center justify-center">
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-primary/20">
+            <span className="absolute inset-0 animate-spin rounded-full border border-t-primary border-r-transparent border-b-transparent border-l-transparent duration-1000" />
+            <span className="font-mono text-2xl text-primary">404</span>
+          </div>
+        </div>
+        <h1 className="font-mono text-lg tracking-[0.2em] text-foreground">SIGNAL LOST</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          The requested sector does not exist in the current orbital catalog.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[11px] tracking-[0.16em] text-primary transition-colors hover:bg-primary/20"
           >
-            Go home
+            RETURN TO COMMAND
           </Link>
         </div>
       </div>
     </div>
   );
 }
+
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
