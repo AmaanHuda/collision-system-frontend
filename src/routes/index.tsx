@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
+import { BootLoader } from "@/components/BootLoader";
 import { ClientOnly } from "@/components/ClientOnly";
 import {
   DEFAULT_GLOBE_FILTERS,
@@ -12,6 +13,7 @@ import { fetchSatellites, type FeedStatus } from "@/services/satelliteService";
 import { loadSgp4, type SatelliteObject } from "@/utils/orbitalPropagation";
 import type { ConjunctionResult } from "@/utils/collisionAnalysis";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -96,11 +98,12 @@ function OrbitalCommand() {
     <main className="relative h-screen w-screen overflow-hidden bg-background">
       <ClientOnly
         fallback={
-          <div className="flex h-full w-full items-center justify-center">
-            <p className="tech-label animate-pulse">INITIALIZING ORBITAL ENGINE…</p>
+          <div className="h-full w-full">
+            <BootLoader message="ACQUIRING ORBITAL DATA…" />
           </div>
         }
       >
+
         <LiveOrbitalScene
           className="absolute inset-0 h-full w-full"
           satellites={satellites}
