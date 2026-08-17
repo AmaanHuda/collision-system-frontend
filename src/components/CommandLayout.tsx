@@ -72,6 +72,16 @@ export function CommandLayout({
       <div className="grid-overlay pointer-events-none fixed inset-0 opacity-60" />
       <div className="pointer-events-none fixed inset-0 [background:radial-gradient(120%_80%_at_70%_-10%,color-mix(in_oklab,var(--violet)_12%,transparent),transparent_60%)]" />
 
+      {/* Mobile scrim */}
+      {open && (
+        <button
+          type="button"
+          aria-label="Close navigation"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm lg:hidden"
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={cn(
