@@ -153,7 +153,13 @@ function OrbitalCommand() {
         <span className="mt-2 inline-block border border-primary/25 px-1.5 py-0.5 font-mono text-[8px] tracking-[0.16em] text-primary/70">
           V2.4.1-PROTOTYPE
         </span>
+        {lastSync && (
+          <p className="mt-1 font-mono text-[8px] tracking-[0.16em] text-muted-foreground/70">
+            SYNC {lastSync.toISOString().slice(11, 19)} UTC
+          </p>
+        )}
       </div>
+
 
 
       <ControlDock
