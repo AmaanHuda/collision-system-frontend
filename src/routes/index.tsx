@@ -77,6 +77,11 @@ function OrbitalCommand() {
     window.setTimeout(() => {
       setStatusMsg("");
     }, 4000);
+    if (feed.status === "live") {
+      setStatusMsg("FEED REFRESHED — " + feed.satellites.length.toLocaleString() + " OBJECTS");
+      window.setTimeout(() => setStatusMsg(""), 2600);
+    }
+
 
   }, []);
 
