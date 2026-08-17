@@ -87,13 +87,13 @@ export function OrbitalViewport({
             <div className="absolute inset-[30%] rounded-full border border-primary/20" />
           </div>
         )}
-        <p className="tech-label absolute left-5 top-5">
+        <p className="tech-label absolute left-5 top-4 max-w-[60%] truncate">
           LIVE ORBITAL FEED · J2000 FRAME
         </p>
       </div>
 
       {showControls && (
-        <div className="absolute left-4 top-12 flex max-w-[calc(100%-2rem)] flex-wrap gap-1.5">
+        <div className="absolute left-4 right-4 top-11 flex flex-wrap gap-1.5 sm:top-12">
           {CONSTELLATIONS.map((c) => (
             <Toggle
               key={c.id}
