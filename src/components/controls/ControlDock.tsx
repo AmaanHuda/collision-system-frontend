@@ -32,12 +32,13 @@ function DockButton({
         onClick={onClick}
         aria-label={label}
         className={cn(
-          "flex h-9 w-9 items-center justify-center border transition-colors",
+          "flex h-9 w-9 items-center justify-center border transition-all duration-200 hover:shadow-[0_0_14px_-4px_rgba(255,255,255,0.25)]",
           active
-            ? "border-primary/60 bg-primary/15 text-primary"
-            : "border-border/70 bg-background/50 text-muted-foreground hover:text-foreground",
+            ? "border-primary/60 bg-primary/15 text-primary shadow-[0_0_12px_-4px_rgba(255,255,255,0.2)]"
+            : "border-border/70 bg-background/50 text-muted-foreground hover:text-foreground hover:border-primary/40",
         )}
       >
+
         {children}
       </button>
       <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap border border-border bg-background/90 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.16em] text-foreground opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
