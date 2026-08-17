@@ -44,9 +44,16 @@ function OrbitalCommand() {
   const [source, setSource] = useState("CELESTRAK GP");
   const [refreshing, setRefreshing] = useState(false);
   const [lastSync, setLastSync] = useState<Date | null>(null);
+  const [now, setNow] = useState(Date.now());
 
-  const dataAgeMinutes = lastSync ? Math.floor((Date.now() - lastSync.getTime()) / 60000) : null;
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const dataAgeMinutes = lastSync ? Math.floor((now - lastSync.getTime()) / 60000) : null;
   const dataStale = dataAgeMinutes !== null && dataAgeMinutes > 120;
+
 
   const [filters, setFilters] = useState<GlobeFilters>(DEFAULT_GLOBE_FILTERS);
 
