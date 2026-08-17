@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
+import { BootLoader } from "@/components/BootLoader";
 import { ClientOnly } from "@/components/ClientOnly";
 import {
   DEFAULT_GLOBE_FILTERS,
@@ -12,6 +13,7 @@ import { fetchSatellites, type FeedStatus } from "@/services/satelliteService";
 import { loadSgp4, type SatelliteObject } from "@/utils/orbitalPropagation";
 import type { ConjunctionResult } from "@/utils/collisionAnalysis";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -41,8 +43,21 @@ function OrbitalCommand() {
   const [statusMsg, setStatusMsg] = useState("ACQUIRING ORBITAL DATA...");
   const [source, setSource] = useState("CELESTRAK GP");
   const [refreshing, setRefreshing] = useState(false);
+  const [lastSync, setLastSync] = useState<Date | null>(null);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const dataAgeMinutes = lastSync ? Math.floor((now - lastSync.getTime()) / 60000) : null;
+  const dataStale = dataAgeMinutes !== null && dataAgeMinutes > 120;
+
 
   const [filters, setFilters] = useState<GlobeFilters>(DEFAULT_GLOBE_FILTERS);
+
+
   const [satA, setSatA] = useState<SatelliteObject | null>(null);
   const [satB, setSatB] = useState<SatelliteObject | null>(null);
   const [awaitingB, setAwaitingB] = useState(false);
@@ -57,10 +72,17 @@ function OrbitalCommand() {
     setStatus(feed.status);
     setSource(feed.source);
     setStatusMsg(feed.message);
+    setLastSync(new Date());
     setRefreshing(false);
     window.setTimeout(() => {
       setStatusMsg("");
     }, 4000);
+    if (feed.status === "live") {
+      setStatusMsg("FEED REFRESHED — " + feed.satellites.length.toLocaleString() + " OBJECTS");
+      window.setTimeout(() => setStatusMsg(""), 2600);
+    }
+
+
   }, []);
 
   useEffect(() => {
@@ -94,13 +116,16 @@ function OrbitalCommand() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-background">
+      <div className="pointer-events-none fixed inset-0 z-10 [background:radial-gradient(circle_at_center,transparent_50%,var(--background)_120%)]" />
       <ClientOnly
         fallback={
-          <div className="flex h-full w-full items-center justify-center">
-            <p className="tech-label animate-pulse">INITIALIZING ORBITAL ENGINE…</p>
+          <div className="h-full w-full">
+            <BootLoader message="ACQUIRING ORBITAL DATA…" />
           </div>
         }
       >
+
+
         <LiveOrbitalScene
           className="absolute inset-0 h-full w-full"
           satellites={satellites}
@@ -112,8 +137,17 @@ function OrbitalCommand() {
         />
       </ClientOnly>
 
+      {status === "live" && satellites.length === 0 && (
+        <div className="pointer-events-none absolute left-4 top-20 z-20 max-w-xs border border-risk-moderate/40 bg-background/80 p-2 backdrop-blur-sm">
+          <p className="font-mono text-[9px] tracking-[0.14em] text-risk-moderate">
+            CATALOG EMPTY · CHECK CONNECTION
+          </p>
+        </div>
+      )}
+
       {/* system status — top left */}
       <div className="pointer-events-none absolute left-4 top-4 z-20">
+
         <h1 className="font-mono text-[11px] tracking-[0.34em] text-foreground">ORBITAL AI</h1>
         <p
           className={cn(
@@ -136,14 +170,33 @@ function OrbitalCommand() {
             )}
           />
           {status === "live" ? "LIVE" : status === "fallback" ? "FALLBACK" : "SYNCING"} · {source}
+          {dataStale && (
+            <span className="ml-1.5 border border-risk-moderate/50 px-1 font-mono text-[8px] text-risk-moderate">
+              STALE
+            </span>
+          )}
         </p>
         <p className="mt-0.5 font-mono text-[9px] tracking-[0.2em] text-muted-foreground">
           {satellites.length.toLocaleString()} OBJECTS TRACKED
         </p>
+
         {statusMsg && (
-          <p className="mt-1 font-mono text-[9px] tracking-[0.2em] text-primary">{statusMsg}</p>
+          <p className="mt-1 animate-fade-in font-mono text-[9px] tracking-[0.2em] text-primary">
+            {statusMsg}
+          </p>
+        )}
+
+        <span className="mt-2 inline-block border border-primary/25 px-1.5 py-0.5 font-mono text-[8px] tracking-[0.16em] text-primary/70">
+          V2.4.1-PROTOTYPE
+        </span>
+        {lastSync && (
+          <p className="mt-1 font-mono text-[8px] tracking-[0.16em] text-muted-foreground/70">
+            SYNC {lastSync.toISOString().slice(11, 19)} UTC
+          </p>
         )}
       </div>
+
+
 
       <ControlDock
         satellites={satellites}

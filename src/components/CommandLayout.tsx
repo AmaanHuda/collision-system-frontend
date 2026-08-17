@@ -67,6 +67,18 @@ export function CommandLayout({
   const clock = useUtcClock();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.key === "\\" || e.key === "b") && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+
   return (
     <div className="relative flex min-h-screen bg-background text-foreground">
       <div className="grid-overlay pointer-events-none fixed inset-0 opacity-60" />
@@ -95,12 +107,16 @@ export function CommandLayout({
             <span className="absolute inset-0 animate-radar rounded-none border-t border-primary/60" />
           </span>
           <span>
-            <span className="block font-mono text-sm tracking-[0.24em] text-foreground">
+            <span className="flex items-center gap-1.5 font-mono text-sm tracking-[0.24em] text-foreground">
               ORBITAL AI
+              <span className="border border-primary/30 px-1 font-mono text-[7px] tracking-[0.2em] text-primary/80">
+                BETA
+              </span>
             </span>
             <span className="tech-label">SSA PLATFORM v2.4</span>
           </span>
         </Link>
+
 
         <nav className="flex-1 space-y-0.5 px-2 py-3">
           {NAV.map(({ to, label, icon: Icon }) => {
@@ -111,7 +127,7 @@ export function CommandLayout({
                 to={to}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "group flex items-center gap-2.5 border-l-2 px-3 py-2 font-mono text-[11px] tracking-[0.14em] transition-colors",
+                  "group relative flex items-center gap-2.5 border-l-2 px-3 py-2 font-mono text-[11px] tracking-[0.14em] transition-colors",
                   active
                     ? "border-l-primary bg-primary/10 text-primary"
                     : "border-l-transparent text-muted-foreground hover:border-l-primary/40 hover:bg-sidebar-accent hover:text-foreground",
@@ -119,10 +135,14 @@ export function CommandLayout({
               >
                 <Icon className="h-3.5 w-3.5" strokeWidth={1.6} />
                 {label.toUpperCase()}
+                {active && (
+                  <span className="absolute right-2 h-1 w-1 rounded-full bg-primary shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                )}
               </Link>
             );
           })}
         </nav>
+
 
         <SystemStatus />
       </aside>
@@ -163,10 +183,16 @@ export function CommandLayout({
         </header>
 
         <main className="relative flex-1 p-4">{children}</main>
+
+        <footer className="pointer-events-none z-10 flex justify-between border-t border-border bg-background/50 px-3 py-2 backdrop-blur-sm">
+          <span className="tech-label text-[9px]">BUILD 26.08.17-ORBITAL</span>
+          <span className="tech-label text-[9px]">RESTRICTED · SSA PLATFORM</span>
+        </footer>
       </div>
     </div>
   );
 }
+
 
 function StatusChip({
   label,

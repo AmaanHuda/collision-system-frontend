@@ -32,17 +32,20 @@ function DockButton({
         onClick={onClick}
         aria-label={label}
         className={cn(
-          "flex h-9 w-9 items-center justify-center border transition-colors",
+          "flex h-9 w-9 items-center justify-center border transition-all duration-200 outline-none hover:shadow-[0_0_14px_-4px_rgba(255,255,255,0.25)] focus-visible:ring-1 focus-visible:ring-primary/60",
           active
-            ? "border-primary/60 bg-primary/15 text-primary"
-            : "border-border/70 bg-background/50 text-muted-foreground hover:text-foreground",
+            ? "border-primary/60 bg-primary/15 text-primary shadow-[0_0_12px_-4px_rgba(255,255,255,0.2)]"
+            : "border-border/70 bg-background/50 text-muted-foreground hover:text-foreground hover:border-primary/40",
         )}
+
       >
+
         {children}
       </button>
-      <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap border border-border bg-background/90 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.16em] text-foreground opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+      <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap border border-border bg-background/90 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.16em] text-foreground opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:opacity-100 group-hover:-translate-y-0.5">
         {label}
       </span>
+
     </div>
   );
 }
@@ -77,6 +80,15 @@ export function ControlDock({
   useEffect(() => {
     if (open === "search") inputRef.current?.focus();
   }, [open]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) setOpen(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
 
   const results = useMemo(() => {
     const q = query.trim().toUpperCase();
@@ -138,9 +150,16 @@ export function ControlDock({
               ref={inputRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setQuery("");
+                  setOpen(null);
+                }
+              }}
               placeholder="NAME OR NORAD ID"
-              className="w-full bg-transparent font-mono text-[11px] tracking-[0.12em] text-foreground outline-none placeholder:text-muted-foreground/60"
+              className="w-full bg-transparent font-mono text-[11px] tracking-[0.12em] text-foreground outline-none ring-0 placeholder:text-muted-foreground/60 focus:ring-0"
             />
+
             <button type="button" onClick={() => setQuery("")} aria-label="Clear search">
               <X className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
             </button>
@@ -161,10 +180,16 @@ export function ControlDock({
               </button>
             ))}
             {query && !results.length && (
-              <p className="px-3 py-3 font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
-                NO MATCH IN LOADED CATALOGUE
-              </p>
+              <div className="px-3 py-4 text-center">
+                <p className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
+                  NO MATCH IN LOADED CATALOGUE
+                </p>
+                <p className="mt-1 font-mono text-[9px] text-muted-foreground/60">
+                  Try a NORAD ID or broad name search
+                </p>
+              </div>
             )}
+
           </div>
         </div>
       )}
@@ -175,8 +200,12 @@ export function ControlDock({
           Real orbital element sets from CelesTrak GP, propagated in-browser with SGP4.
           Click any object for intelligence, then select a second object for a prototype
           conjunction screening. Risk values are illustrative, not operational Pc.
+          <p className="mt-2 border-t border-border pt-2 tracking-[0.14em] text-muted-foreground/70">
+            SHORTCUTS: ESC close · CTRL+B sidebar
+          </p>
         </div>
       )}
+
 
       <div className="pointer-events-auto flex items-center gap-1.5 border border-border/70 bg-background/60 p-1.5 backdrop-blur-xl">
         <DockButton
