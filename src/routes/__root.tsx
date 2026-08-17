@@ -91,8 +91,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "AI-driven collision risk assessment for mega-constellation satellites.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: "Orbital AI — Collision Risk Assessment" },
+      {
+        property: "og:description",
+        content:
+          "AI-driven collision risk assessment for mega-constellation satellites.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
