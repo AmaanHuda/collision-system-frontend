@@ -199,8 +199,12 @@ export function ControlDock({
           Real orbital element sets from CelesTrak GP, propagated in-browser with SGP4.
           Click any object for intelligence, then select a second object for a prototype
           conjunction screening. Risk values are illustrative, not operational Pc.
+          <p className="mt-2 border-t border-border pt-2 tracking-[0.14em] text-muted-foreground/70">
+            SHORTCUTS: ESC close · CTRL+B sidebar
+          </p>
         </div>
       )}
+
 
       <div className="pointer-events-auto flex items-center gap-1.5 border border-border/70 bg-background/60 p-1.5 backdrop-blur-xl">
         <DockButton
