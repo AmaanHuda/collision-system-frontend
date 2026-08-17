@@ -171,10 +171,16 @@ export function ControlDock({
               </button>
             ))}
             {query && !results.length && (
-              <p className="px-3 py-3 font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
-                NO MATCH IN LOADED CATALOGUE
-              </p>
+              <div className="px-3 py-4 text-center">
+                <p className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
+                  NO MATCH IN LOADED CATALOGUE
+                </p>
+                <p className="mt-1 font-mono text-[9px] text-muted-foreground/60">
+                  Try a NORAD ID or broad name search
+                </p>
+              </div>
             )}
+
           </div>
         </div>
       )}
