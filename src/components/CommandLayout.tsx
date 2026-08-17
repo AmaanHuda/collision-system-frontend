@@ -127,7 +127,7 @@ export function CommandLayout({
                 to={to}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "group flex items-center gap-2.5 border-l-2 px-3 py-2 font-mono text-[11px] tracking-[0.14em] transition-colors",
+                  "group relative flex items-center gap-2.5 border-l-2 px-3 py-2 font-mono text-[11px] tracking-[0.14em] transition-colors",
                   active
                     ? "border-l-primary bg-primary/10 text-primary"
                     : "border-l-transparent text-muted-foreground hover:border-l-primary/40 hover:bg-sidebar-accent hover:text-foreground",
@@ -135,10 +135,14 @@ export function CommandLayout({
               >
                 <Icon className="h-3.5 w-3.5" strokeWidth={1.6} />
                 {label.toUpperCase()}
+                {active && (
+                  <span className="absolute right-2 h-1 w-1 rounded-full bg-primary shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                )}
               </Link>
             );
           })}
         </nav>
+
 
         <SystemStatus />
       </aside>
