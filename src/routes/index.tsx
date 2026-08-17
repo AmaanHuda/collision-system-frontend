@@ -147,10 +147,16 @@ function OrbitalCommand() {
             )}
           />
           {status === "live" ? "LIVE" : status === "fallback" ? "FALLBACK" : "SYNCING"} · {source}
+          {dataStale && (
+            <span className="ml-1.5 border border-risk-moderate/50 px-1 font-mono text-[8px] text-risk-moderate">
+              STALE
+            </span>
+          )}
         </p>
         <p className="mt-0.5 font-mono text-[9px] tracking-[0.2em] text-muted-foreground">
           {satellites.length.toLocaleString()} OBJECTS TRACKED
         </p>
+
         {statusMsg && (
           <p className="mt-1 font-mono text-[9px] tracking-[0.2em] text-primary">{statusMsg}</p>
         )}
