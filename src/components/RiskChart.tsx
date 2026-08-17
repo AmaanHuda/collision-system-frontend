@@ -21,7 +21,7 @@ export function ProbabilityChart() {
   return (
     <div className="h-[260px] w-full px-2 py-3">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={probabilityCurve} margin={{ top: 8, right: 12, bottom: 0, left: -14 }}>
+        <AreaChart data={probabilityCurve} margin={{ top: 8, right: 24, bottom: 0, left: -14 }}>
           <defs>
             <linearGradient id="pcFill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--risk-critical)" stopOpacity={0.45} />
@@ -33,8 +33,8 @@ export function ProbabilityChart() {
             </linearGradient>
           </defs>
           <CartesianGrid stroke="var(--grid)" vertical={false} />
-          <XAxis dataKey="t" interval={3} {...axis} />
-          <YAxis unit="%" {...axis} />
+          <XAxis dataKey="t" interval="preserveStartEnd" minTickGap={28} {...axis} />
+          <YAxis unit="%" width={44} {...axis} />
           <Tooltip
             contentStyle={{
               background: "var(--popover)",
