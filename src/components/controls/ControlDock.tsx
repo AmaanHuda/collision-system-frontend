@@ -41,9 +41,10 @@ function DockButton({
 
         {children}
       </button>
-      <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap border border-border bg-background/90 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.16em] text-foreground opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+      <span className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap border border-border bg-background/90 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.16em] text-foreground opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:opacity-100 group-hover:-translate-y-0.5">
         {label}
       </span>
+
     </div>
   );
 }
