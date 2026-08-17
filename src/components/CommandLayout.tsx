@@ -67,6 +67,18 @@ export function CommandLayout({
   const clock = useUtcClock();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.key === "\\" || e.key === "b") && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+
   return (
     <div className="relative flex min-h-screen bg-background text-foreground">
       <div className="grid-overlay pointer-events-none fixed inset-0 opacity-60" />

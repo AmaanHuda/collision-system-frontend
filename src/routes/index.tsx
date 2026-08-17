@@ -111,6 +111,7 @@ function OrbitalCommand() {
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-background">
+      <div className="pointer-events-none fixed inset-0 z-10 [background:radial-gradient(circle_at_center,transparent_50%,var(--background)_120%)]" />
       <ClientOnly
         fallback={
           <div className="h-full w-full">
@@ -118,6 +119,7 @@ function OrbitalCommand() {
           </div>
         }
       >
+
 
         <LiveOrbitalScene
           className="absolute inset-0 h-full w-full"
