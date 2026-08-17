@@ -78,6 +78,15 @@ export function ControlDock({
     if (open === "search") inputRef.current?.focus();
   }, [open]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) setOpen(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+
   const results = useMemo(() => {
     const q = query.trim().toUpperCase();
     if (!q) return [];

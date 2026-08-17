@@ -163,10 +163,16 @@ export function CommandLayout({
         </header>
 
         <main className="relative flex-1 p-4">{children}</main>
+
+        <footer className="pointer-events-none z-10 flex justify-between border-t border-border bg-background/50 px-3 py-2 backdrop-blur-sm">
+          <span className="tech-label text-[9px]">BUILD 26.08.17-ORBITAL</span>
+          <span className="tech-label text-[9px]">RESTRICTED · SSA PLATFORM</span>
+        </footer>
       </div>
     </div>
   );
 }
+
 
 function StatusChip({
   label,
