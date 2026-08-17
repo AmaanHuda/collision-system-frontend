@@ -43,8 +43,10 @@ function OrbitalCommand() {
   const [statusMsg, setStatusMsg] = useState("ACQUIRING ORBITAL DATA...");
   const [source, setSource] = useState("CELESTRAK GP");
   const [refreshing, setRefreshing] = useState(false);
+  const [lastSync, setLastSync] = useState<Date | null>(null);
 
   const [filters, setFilters] = useState<GlobeFilters>(DEFAULT_GLOBE_FILTERS);
+
   const [satA, setSatA] = useState<SatelliteObject | null>(null);
   const [satB, setSatB] = useState<SatelliteObject | null>(null);
   const [awaitingB, setAwaitingB] = useState(false);
@@ -59,10 +61,12 @@ function OrbitalCommand() {
     setStatus(feed.status);
     setSource(feed.source);
     setStatusMsg(feed.message);
+    setLastSync(new Date());
     setRefreshing(false);
     window.setTimeout(() => {
       setStatusMsg("");
     }, 4000);
+
   }, []);
 
   useEffect(() => {
